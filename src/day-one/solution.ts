@@ -5,7 +5,10 @@ import readline from 'readline';
 
 export async function getDayOneAnswer(): Promise<number> {
   const lineReader = readline.createInterface({
-    input: fs.createReadStream(path.join(__dirname, 'inputs.txt'), 'utf-8'),
+    input: fs.createReadStream(
+      path.join(__dirname, '..', '..', 'src', 'day-one', 'inputs.txt'),
+      'utf-8'
+    ),
   });
 
   let workingSum = 0;
