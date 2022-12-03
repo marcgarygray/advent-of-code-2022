@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import events from "events";
-import readline from "readline";
+import fs from 'fs';
+import path from 'path';
+import events from 'events';
+import readline from 'readline';
 
 type TopThree = {
   1: number;
@@ -12,15 +12,15 @@ type TopThree = {
 export async function getTopThreeElves(): Promise<TopThree> {
   const lineReader = readline.createInterface({
     input: fs.createReadStream(
-      path.join(__dirname, "..", "..", "src", "day-one", "inputs.txt"),
-      "utf-8"
+      path.join(__dirname, '..', '..', 'src', 'day-one', 'inputs.txt'),
+      'utf-8'
     ),
   });
 
   let workingSum = 0;
   const elves: number[] = [];
-  lineReader.on("line", (line) => {
-    if (line !== "") {
+  lineReader.on('line', (line) => {
+    if (line !== '') {
       workingSum += Number(line);
     } else {
       elves.push(workingSum);
@@ -28,7 +28,7 @@ export async function getTopThreeElves(): Promise<TopThree> {
     }
   });
 
-  await events.once(lineReader, "close");
+  await events.once(lineReader, 'close');
 
   elves.sort((a, b) => b - a);
 
