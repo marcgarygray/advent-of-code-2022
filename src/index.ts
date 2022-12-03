@@ -2,6 +2,7 @@
 import chalk from 'chalk';
 import { getTopThreeElves } from './day-one/solution';
 import { getTotalScore, getTotalScorePartTwo } from './day-two/solution';
+import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
 
 (async () => {
   const topThreeElves = await getTopThreeElves();
@@ -18,9 +19,6 @@ import { getTotalScore, getTotalScorePartTwo } from './day-two/solution';
      )}
      ${chalk.bgMagenta.white(`        `)}
   `);
-})();
-
-(async () => {
   const totalScore = await getTotalScore();
   const totalScorePartTwo = await getTotalScorePartTwo();
   console.log(`
@@ -34,4 +32,8 @@ import { getTotalScore, getTotalScorePartTwo } from './day-two/solution';
      ${chalk.bgMagenta.white(` ${totalScorePartTwo}  `)}
      ${chalk.bgMagenta.white(`        `)}
   `);
+  const totalPriotiy = await getTotalPriority();
+  console.log(totalPriotiy);
+  const badgePriorityTotal = await getBadgePriorityTotal();
+  console.log(badgePriorityTotal);
 })();
