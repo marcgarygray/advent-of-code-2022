@@ -7,7 +7,6 @@ import readline from 'readline';
  * A: Rock
  * B: Paper
  * C: Scissors
- *
  */
 type OpponentThrow = 'A' | 'B' | 'C';
 
@@ -15,7 +14,6 @@ type OpponentThrow = 'A' | 'B' | 'C';
  * X: Rock
  * Y: Paper
  * Z: Scissors
- *
  */
 type YourThrow = 'X' | 'Y' | 'Z';
 
@@ -24,6 +22,45 @@ const throwPoints: Record<YourThrow, number> = {
   Y: 2,
   Z: 3,
 };
+
+function rockPaperScissors({
+  you,
+  opponent,
+}: {
+  you: YourThrow;
+  opponent: OpponentThrow;
+}): number {
+  let roundScore = throwPoints[you];
+  switch (you) {
+    case 'X':
+      switch (opponent) {
+        case 'A':
+          return (roundScore += 3);
+        case 'B':
+          return roundScore;
+        case 'C':
+          return (roundScore += 6);
+      }
+    case 'Y':
+      switch (opponent) {
+        case 'A':
+          return (roundScore += 6);
+        case 'B':
+          return (roundScore += 3);
+        case 'C':
+          return roundScore;
+      }
+    case 'Z':
+      switch (opponent) {
+        case 'A':
+          return roundScore;
+        case 'B':
+          return (roundScore += 6);
+        case 'C':
+          return (roundScore += 3);
+      }
+  }
+}
 
 export async function getTotalScore(): Promise<number> {
   const lineReader = readline.createInterface({
@@ -36,44 +73,92 @@ export async function getTotalScore(): Promise<number> {
   let totalScore = 0;
   lineReader.on('line', (line) => {
     const round = line.split(' ');
-    const opponentThrow = round[0] as OpponentThrow;
-    const yourThrow = round[1] as YourThrow;
-    let roundScore = throwPoints[yourThrow];
-    switch (yourThrow) {
-      case 'X':
-        if (opponentThrow === 'A') {
-          roundScore += 3;
-        }
-        if (opponentThrow === 'B') {
-          // loss - no points
-        }
-        if (opponentThrow === 'C') {
-          roundScore += 6;
-        }
-        break;
-      case 'Y':
-        if (opponentThrow === 'A') {
-          roundScore += 6;
-        }
-        if (opponentThrow === 'B') {
-          roundScore += 3;
-        }
-        if (opponentThrow === 'C') {
-          // loss - no points
-        }
-        break;
-      case 'Z':
-        if (opponentThrow === 'A') {
-          // loss - no points
-        }
-        if (opponentThrow === 'B') {
-          roundScore += 6;
-        }
-        if (opponentThrow === 'C') {
-          roundScore += 3;
-        }
-    }
-    totalScore += roundScore;
+    const opponent = round[0] as OpponentThrow;
+    const you = round[1] as YourThrow;
+    totalScore += rockPaperScissors({
+      opponent,
+      you,
+    });
+  });
+
+  await events.once(lineReader, 'close');
+
+  return totalScore;
+}
+
+// part two
+
+type DesiredOutcome = 'lose' | 'draw' | 'win';
+
+function decodeDesiredOutcome({
+  encoded,
+}: {
+  encoded: YourThrow;
+}): DesiredOutcome {
+  switch (encoded) {
+    case 'X':
+      return 'lose';
+    case 'Y':
+      return 'draw';
+    case 'Z':
+      return 'win';
+  }
+}
+
+function getThrowForDesiredOutcome({
+  opponent,
+  outcome,
+}: {
+  opponent: OpponentThrow;
+  outcome: DesiredOutcome;
+}): YourThrow {
+  switch (opponent) {
+    case 'A':
+      switch (outcome) {
+        case 'lose':
+          return 'Z';
+        case 'win':
+          return 'Y';
+        case 'draw':
+          return 'X';
+      }
+    case 'B':
+      switch (outcome) {
+        case 'lose':
+          return 'X';
+        case 'win':
+          return 'Z';
+        case 'draw':
+          return 'Y';
+      }
+    case 'C':
+      switch (outcome) {
+        case 'lose':
+          return 'Y';
+        case 'win':
+          return 'X';
+        case 'draw':
+          return 'Z';
+      }
+  }
+}
+
+export async function getTotalScorePartTwo(): Promise<number> {
+  const lineReader = readline.createInterface({
+    input: fs.createReadStream(
+      path.join(__dirname, '..', '..', 'src', 'day-two', 'inputs.txt'),
+      'utf-8'
+    ),
+  });
+
+  let totalScore = 0;
+  lineReader.on('line', (line) => {
+    const round = line.split(' ');
+    const opponent = round[0] as OpponentThrow;
+    const encoded = round[1] as YourThrow;
+    const outcome = decodeDesiredOutcome({ encoded });
+    const you = getThrowForDesiredOutcome({ opponent, outcome });
+    totalScore += rockPaperScissors({ opponent, you });
   });
 
   await events.once(lineReader, 'close');
