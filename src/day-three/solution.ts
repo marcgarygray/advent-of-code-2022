@@ -61,9 +61,7 @@ export async function getBadgePriorityTotal(): Promise<number> {
     if (lastGroup === undefined || lastGroup.length === 3) {
       elfGroups.push([line]);
     } else {
-      elfGroups[elfGroups.length - 1] = lastGroup
-        ? [...lastGroup, line]
-        : [line];
+      elfGroups[elfGroups.length - 1] = [...lastGroup, line];
     }
   });
 
