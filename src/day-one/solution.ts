@@ -1,7 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-import events from 'events';
-import readline from 'readline';
+import { readLines } from '../read-lines';
 
 type TopThree = {
   1: number;
@@ -9,28 +6,26 @@ type TopThree = {
   3: number;
 };
 
-export async function getTopThreeElves(): Promise<TopThree> {
-  const lineReader = readline.createInterface({
-    input: fs.createReadStream(
-      path.join(__dirname, '..', '..', 'src', 'day-one', 'inputs.txt'),
-      'utf-8'
-    ),
-  });
+export async function getTopThreeElvesByCalories(): Promise<TopThree> {
+  let totalCalories = 0;
+  const elvesByCalories: number[] = [];
 
-  let workingSum = 0;
-  const elves: number[] = [];
-  lineReader.on('line', (line) => {
+  const callback = (line: string) => {
     if (line !== '') {
-      workingSum += Number(line);
+      totalCalories += Number(line);
     } else {
-      elves.push(workingSum);
-      workingSum = 0;
+      elvesByCalories.push(totalCalories);
+      totalCalories = 0;
     }
-  });
+  };
 
-  await events.once(lineReader, 'close');
+  await readLines({ callback, day: 'one' });
 
-  elves.sort((a, b) => b - a);
+  elvesByCalories.sort((a, b) => b - a);
 
-  return { 1: elves[0], 2: elves[1], 3: elves[2] };
+  return {
+    1: elvesByCalories[0],
+    2: elvesByCalories[1],
+    3: elvesByCalories[2],
+  };
 }

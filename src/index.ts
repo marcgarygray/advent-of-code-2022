@@ -1,18 +1,19 @@
 #!/usr/bin/env node
+
 import chalk from 'chalk';
-import { getTopThreeElves } from './day-one/solution';
+import { getTopThreeElvesByCalories } from './day-one/solution';
 import { getTotalScore, getTotalScorePartTwo } from './day-two/solution';
 import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
 
 (async () => {
-  const topThreeElves = await getTopThreeElves();
+  const topThreeElves = await getTopThreeElvesByCalories();
   console.log(`
     ${chalk.magenta('Day One Answers:')}
-    ${chalk.magenta(` Top Elf:`)}
+    ${chalk.magenta(` Total Calories for Top Elf:`)}
      ${chalk.bgMagenta.white(`        `)}
      ${chalk.bgMagenta.white(` ${topThreeElves[1]}  `)}
      ${chalk.bgMagenta.white(`        `)}
-    ${chalk.magenta(` Top Three Elves:`)}
+    ${chalk.magenta(` Total Calories for Top Three Elves:`)}
      ${chalk.bgMagenta.white(`        `)}
      ${chalk.bgMagenta.white(
        ` ${topThreeElves[1] + topThreeElves[2] + topThreeElves[3]} `
