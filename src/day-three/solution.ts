@@ -1,31 +1,36 @@
-import fs from 'fs';
-import path from 'path';
-import events from 'events';
-import readline from 'readline';
+import { readLines } from '../read-lines';
 
 function getPriority({ item }: { item: string }): number {
   const charCode = item.charCodeAt(0);
+
   // lowercase
   if (charCode >= 97 && charCode <= 122) {
     return charCode - 96;
   }
+
   // uppercase
   if (charCode >= 65 && charCode <= 90) {
     return charCode - 38;
   }
+
   return 0;
 }
 
-export async function getTotalPriority(): Promise<number> {
-  const lineReader = readline.createInterface({
-    input: fs.createReadStream(
-      path.join(__dirname, '..', '..', 'src', 'day-three', 'inputs.txt'),
-      'utf-8'
-    ),
-  });
+type PrioritySums = {
+  badgePrioritySum: number;
+  duplicatePrioritySum: number;
+};
 
-  let totalPriority = 0;
-  lineReader.on('line', (line) => {
+export async function getPrioritySums(): Promise<PrioritySums> {
+  // part one
+  let duplicatePrioritySum = 0;
+
+  // part two
+  let badgePrioritySum = 0;
+  const elfGroups: string[][] = [];
+
+  const callback = (line: string) => {
+    // part one
     const compartmentOne = line.slice(0, line.length / 2);
     const compartmentTwo = line.slice(line.length / 2);
     const compartmentOneItems = compartmentOne.split('');
@@ -37,38 +42,20 @@ export async function getTotalPriority(): Promise<number> {
         break;
       }
     }
-    totalPriority += getPriority({ item: duplicateItem });
-  });
+    duplicatePrioritySum += getPriority({ item: duplicateItem });
 
-  await events.once(lineReader, 'close');
-
-  return totalPriority;
-}
-
-// part two
-
-export async function getBadgePriorityTotal(): Promise<number> {
-  const lineReader = readline.createInterface({
-    input: fs.createReadStream(
-      path.join(__dirname, '..', '..', 'src', 'day-three', 'inputs.txt'),
-      'utf-8'
-    ),
-  });
-
-  const elfGroups: string[][] = [];
-  lineReader.on('line', (line) => {
+    // part two
     const lastGroup = elfGroups[elfGroups.length - 1];
     if (lastGroup === undefined || lastGroup.length === 3) {
       elfGroups.push([line]);
     } else {
       elfGroups[elfGroups.length - 1] = [...lastGroup, line];
     }
-  });
+  };
 
-  await events.once(lineReader, 'close');
+  await readLines({ callback, day: 'three' });
 
-  let totalPriority = 0;
-
+  // part two
   elfGroups.forEach((group) => {
     const ruckOne = group[0];
     const ruckOneItems = ruckOne.split('');
@@ -86,8 +73,8 @@ export async function getBadgePriorityTotal(): Promise<number> {
         break;
       }
     }
-    totalPriority += getPriority({ item: duplicateItem });
+    badgePrioritySum += getPriority({ item: duplicateItem });
   });
 
-  return totalPriority;
+  return { badgePrioritySum, duplicatePrioritySum };
 }

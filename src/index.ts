@@ -3,17 +3,20 @@
 import chalk from 'chalk';
 import { getTopThreeElvesByCalories } from './day-one/solution';
 import { getScores } from './day-two/solution';
-import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
+import { getPrioritySums } from './day-three/solution';
 import { getFullyOverlappedPairCount } from './day-four/solution';
 
 (async () => {
+  console.log(chalk.magenta.bold.underline('\nAdvent of Code 2022'));
   // day one
   const topThreeElves = await getTopThreeElvesByCalories();
 
   console.log(
-    `\n${chalk.magenta('Day One Answers:')}\n ${chalk.magenta(
-      `Total Calories for Top Elf: `
-    )}${chalk.bgMagenta.white(`${topThreeElves[1]}`)}\n ${chalk.magenta(
+    `\n ${chalk.magenta.underline('Day One Answers:')}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(`Total Calories for Top Elf: `)}${chalk.bgMagenta.white(
+      `${topThreeElves[1]}`
+    )}\n  ${chalk.greenBright('>')} ${chalk.magenta(
       `Total Calories for Top Three Elves: `
     )}${chalk.bgMagenta.white(
       `${topThreeElves[1] + topThreeElves[2] + topThreeElves[3]}`
@@ -24,27 +27,44 @@ import { getFullyOverlappedPairCount } from './day-four/solution';
   const { correctScore, incorrectScore } = await getScores();
 
   console.log(
-    `\n${chalk.magenta('Day Two Answers:')}\n ${chalk.magenta(
-      `Incorrect Total Score: `
-    )}${chalk.bgMagenta.white(`${incorrectScore}`)}\n ${chalk.magenta(
+    `\n ${chalk.magenta.underline('Day Two Answers:')}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(`Incorrect Total Score: `)}${chalk.bgMagenta.white(
+      `${incorrectScore}`
+    )}\n  ${chalk.greenBright('>')} ${chalk.magenta(
       `Correct Total Score After Getting More Elf Intelligence: `
     )}${chalk.bgMagenta.white(`${correctScore}`)}`
   );
 
   // day three
-  const totalPriority = await getTotalPriority();
-  const badgePriorityTotal = await getBadgePriorityTotal();
+  const { badgePrioritySum, duplicatePrioritySum } = await getPrioritySums();
 
   console.log(
-    `\n${chalk.magenta('Day Three Answers:')}\n ${chalk.magenta(
-      'Total Priority: '
-    )}${chalk.bgMagenta.white(`${totalPriority}`)}\n ${chalk.magenta(
-      'Total Badge Priority: '
-    )}${chalk.bgMagenta.white(`${badgePriorityTotal}`)}`
+    `\n ${chalk.magenta.underline('Day Three Answers:')}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(
+      'Sum of Duplicate Item Priorities: '
+    )}${chalk.bgMagenta.white(
+      `${duplicatePrioritySum}`
+    )}\n  ${chalk.greenBright('>')} ${chalk.magenta(
+      'Sum of Badge Priorities: '
+    )}${chalk.bgMagenta.white(`${badgePrioritySum}`)}`
   );
 
   // day four
-  const { completeOverlap, anyOverlap } = await getFullyOverlappedPairCount();
-  console.log(completeOverlap);
-  console.log(anyOverlap);
+  const { anyOverlap, completeOverlap } = await getFullyOverlappedPairCount();
+  console.log(
+    `\n ${chalk.magenta.underline('Day Four Answers:')}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(
+      'Assignment pairs with complete overlap: '
+    )}${chalk.bgMagenta.white(`${completeOverlap}`)}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(
+      'Assignment pairs with any overlap: '
+    )}${chalk.bgMagenta.white(`${anyOverlap}`)}`
+  );
+
+  // day five
+  console.log(`\n${chalk.magenta.underline('Day Five Answers:')}\n`);
 })();
