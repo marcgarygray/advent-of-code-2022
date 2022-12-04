@@ -1,4 +1,4 @@
-import { readLines } from '../read-lines';
+import { readLines } from '../../read-lines';
 
 function getPriority({ item }: { item: string }): number {
   const charCode = item.charCodeAt(0);
@@ -53,7 +53,7 @@ export async function getPrioritySums(): Promise<PrioritySums> {
     }
   };
 
-  await readLines({ callback, day: 'three' });
+  await readLines({ callback, day: '3' });
 
   // part two
   elfGroups.forEach((group) => {

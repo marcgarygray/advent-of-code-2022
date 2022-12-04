@@ -1,4 +1,4 @@
-import { readLines } from '../read-lines';
+import { readLines } from '../../read-lines';
 
 type OverlapCounts = {
   anyOverlap: number;
@@ -39,7 +39,7 @@ export async function getFullyOverlappedPairCount(): Promise<OverlapCounts> {
     }
   };
 
-  await readLines({ callback, day: 'four' });
+  await readLines({ callback, day: '4' });
 
   return { anyOverlap, completeOverlap };
 }

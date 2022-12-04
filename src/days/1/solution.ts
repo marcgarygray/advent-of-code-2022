@@ -1,4 +1,4 @@
-import { readLines } from '../read-lines';
+import { readLines } from '../../read-lines';
 
 type TopThree = {
   1: number;
@@ -19,7 +19,7 @@ export async function getTopThreeElvesByCalories(): Promise<TopThree> {
     }
   };
 
-  await readLines({ callback, day: 'one' });
+  await readLines({ callback, day: '1' });
 
   elvesByCalories.sort((a, b) => b - a);
 

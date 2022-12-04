@@ -14,7 +14,7 @@ export async function readLines({
   callback,
   day,
 }: ReadlinesArg): Promise<void> {
-  const filePath = path.join(__dirname, '..', 'src', `day-${day}`, 'input.txt');
+  const filePath = path.join(__dirname, '..', 'src', `days`, day, 'input.txt');
   const lineReader = readline.createInterface({
     input: fs.createReadStream(filePath, 'utf-8'),
   });

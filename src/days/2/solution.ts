@@ -1,4 +1,4 @@
-import { readLines } from '../read-lines';
+import { readLines } from '../../read-lines';
 
 type EncodedOpponentThrow = 'A' | 'B' | 'C';
 
@@ -155,7 +155,7 @@ export async function getScores(): Promise<Scores> {
     });
   };
 
-  await readLines({ callback, day: 'two' });
+  await readLines({ callback, day: '2' });
 
   return { correctScore, incorrectScore };
 }
