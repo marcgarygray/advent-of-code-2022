@@ -2,8 +2,9 @@
 
 import chalk from 'chalk';
 import { getTopThreeElvesByCalories } from './day-one/solution';
-import { getTotalScore } from './day-two/solution';
+import { getScores } from './day-two/solution';
 import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
+import { getFullyOverlappedPairCount } from './day-four/solution';
 
 (async () => {
   // day one
@@ -20,14 +21,14 @@ import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
   );
 
   // day two
-  const { wrongTotal, correctTotal } = await getTotalScore();
+  const { correctScore, incorrectScore } = await getScores();
 
   console.log(
     `\n${chalk.magenta('Day Two Answers:')}\n ${chalk.magenta(
-      `Total Score: `
-    )}${chalk.bgMagenta.white(`${wrongTotal}`)}\n ${chalk.magenta(
-      `Total Score After Getting More Elf Intelligence: `
-    )}${chalk.bgMagenta.white(`${correctTotal}`)}`
+      `Incorrect Total Score: `
+    )}${chalk.bgMagenta.white(`${incorrectScore}`)}\n ${chalk.magenta(
+      `Correct Total Score After Getting More Elf Intelligence: `
+    )}${chalk.bgMagenta.white(`${correctScore}`)}`
   );
 
   // day three
@@ -43,4 +44,7 @@ import { getTotalPriority, getBadgePriorityTotal } from './day-three/solution';
   );
 
   // day four
+  const { completeOverlap, anyOverlap } = await getFullyOverlappedPairCount();
+  console.log(completeOverlap);
+  console.log(anyOverlap);
 })();

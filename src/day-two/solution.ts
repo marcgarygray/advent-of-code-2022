@@ -1,144 +1,161 @@
 import { readLines } from '../read-lines';
 
-/*
- * A: Rock
- * B: Paper
- * C: Scissors
- */
-type OpponentThrow = 'A' | 'B' | 'C';
+type EncodedOpponentThrow = 'A' | 'B' | 'C';
 
-/**
- * X: Rock
- * Y: Paper
- * Z: Scissors
- */
-type YourThrow = 'X' | 'Y' | 'Z';
+enum OpponentThrow {
+  Rock = 'A',
+  Paper = 'B',
+  Scissors = 'C',
+}
 
-const throwPoints: Record<YourThrow, number> = {
+type EncodedMyThrow = 'X' | 'Y' | 'Z';
+
+enum MyThrow {
+  Rock = 'X',
+  Paper = 'Y',
+  Scissors = 'Z',
+}
+
+const throwPoints: Record<EncodedMyThrow, number> = {
   X: 1,
   Y: 2,
   Z: 3,
 };
 
+type Outcome = 'lose' | 'draw' | 'win';
+
+const roundScore: Record<Outcome, number> = {
+  lose: 0,
+  draw: 3,
+  win: 6,
+};
+
+type RockPaperScissorsArg = {
+  encodedMyThrow: EncodedMyThrow;
+  encodedOpponentThrow: EncodedOpponentThrow;
+};
+
 function rockPaperScissors({
-  you,
-  opponent,
-}: {
-  you: YourThrow;
-  opponent: OpponentThrow;
-}): number {
-  let roundScore = throwPoints[you];
-  switch (you) {
-    case 'X':
-      switch (opponent) {
-        case 'A':
-          return (roundScore += 3);
-        case 'B':
-          return roundScore;
-        case 'C':
-          return (roundScore += 6);
+  encodedMyThrow,
+  encodedOpponentThrow,
+}: RockPaperScissorsArg): number {
+  let score = throwPoints[encodedMyThrow];
+
+  switch (encodedMyThrow) {
+    case MyThrow.Rock:
+      switch (encodedOpponentThrow) {
+        case OpponentThrow.Rock:
+          return (score += roundScore.draw);
+        case OpponentThrow.Paper:
+          return (score += roundScore.lose);
+        case OpponentThrow.Scissors:
+          return (score += roundScore.win);
       }
-    case 'Y':
-      switch (opponent) {
-        case 'A':
-          return (roundScore += 6);
-        case 'B':
-          return (roundScore += 3);
-        case 'C':
-          return roundScore;
+    case MyThrow.Paper:
+      switch (encodedOpponentThrow) {
+        case OpponentThrow.Rock:
+          return (score += roundScore.win);
+        case OpponentThrow.Paper:
+          return (score += roundScore.draw);
+        case OpponentThrow.Scissors:
+          return (score += roundScore.lose);
       }
-    case 'Z':
-      switch (opponent) {
-        case 'A':
-          return roundScore;
-        case 'B':
-          return (roundScore += 6);
-        case 'C':
-          return (roundScore += 3);
+    case MyThrow.Scissors:
+      switch (encodedOpponentThrow) {
+        case OpponentThrow.Rock:
+          return (score += roundScore.lose);
+        case OpponentThrow.Paper:
+          return (score += roundScore.win);
+        case OpponentThrow.Scissors:
+          return (score += roundScore.draw);
       }
   }
+  return score;
 }
 
-type DesiredOutcome = 'lose' | 'draw' | 'win';
+type DecodeDesiredOutcomeArg = {
+  encodedOutcome: EncodedMyThrow;
+};
 
-function decodeDesiredOutcome({
-  encoded,
-}: {
-  encoded: YourThrow;
-}): DesiredOutcome {
-  switch (encoded) {
-    case 'X':
-      return 'lose';
-    case 'Y':
-      return 'draw';
-    case 'Z':
-      return 'win';
-  }
-}
+const desiredOutcomeDictionary: Record<EncodedMyThrow, Outcome> = {
+  X: 'lose',
+  Y: 'draw',
+  Z: 'win',
+};
+
+type GetThrowForDesiredOutcomeArg = {
+  desiredOutcome: Outcome;
+  encodedOpponentThrow: EncodedOpponentThrow;
+};
 
 function getThrowForDesiredOutcome({
-  opponent,
-  outcome,
-}: {
-  opponent: OpponentThrow;
-  outcome: DesiredOutcome;
-}): YourThrow {
-  switch (opponent) {
-    case 'A':
-      switch (outcome) {
+  desiredOutcome,
+  encodedOpponentThrow,
+}: GetThrowForDesiredOutcomeArg): EncodedMyThrow {
+  switch (encodedOpponentThrow) {
+    case OpponentThrow.Rock:
+      switch (desiredOutcome) {
         case 'lose':
-          return 'Z';
+          return MyThrow.Scissors;
         case 'win':
-          return 'Y';
+          return MyThrow.Paper;
         case 'draw':
-          return 'X';
+          return MyThrow.Rock;
       }
-    case 'B':
-      switch (outcome) {
+    case OpponentThrow.Paper:
+      switch (desiredOutcome) {
         case 'lose':
-          return 'X';
+          return MyThrow.Rock;
         case 'win':
-          return 'Z';
+          return MyThrow.Scissors;
         case 'draw':
-          return 'Y';
+          return MyThrow.Paper;
       }
-    case 'C':
-      switch (outcome) {
+    case OpponentThrow.Scissors:
+      switch (desiredOutcome) {
         case 'lose':
-          return 'Y';
+          return MyThrow.Paper;
         case 'win':
-          return 'X';
+          return MyThrow.Rock;
         case 'draw':
-          return 'Z';
+          return MyThrow.Scissors;
       }
   }
+  return 'X';
 }
 
-export async function getTotalScore(): Promise<{
-  wrongTotal: number;
-  correctTotal: number;
-}> {
-  let totalScore = 0;
-  let correctTotalScore = 0;
+type Scores = {
+  correctScore: number;
+  incorrectScore: number;
+};
+
+export async function getScores(): Promise<Scores> {
+  let incorrectScore = 0;
+  let correctScore = 0;
 
   const callback = (line: string) => {
     // part one
     const round = line.split(' ');
-    const opponent = round[0] as OpponentThrow;
-    const you = round[1] as YourThrow;
-    totalScore += rockPaperScissors({
-      opponent,
-      you,
+    const encodedOpponentThrow = round[0] as EncodedOpponentThrow;
+    const encodedMyThrow = round[1] as EncodedMyThrow;
+    incorrectScore += rockPaperScissors({
+      encodedMyThrow,
+      encodedOpponentThrow,
     });
 
     // part two
-    const encoded = round[1] as YourThrow;
-    const outcome = decodeDesiredOutcome({ encoded });
-    const correctYou = getThrowForDesiredOutcome({ opponent, outcome });
-    correctTotalScore += rockPaperScissors({ opponent, you: correctYou });
+    const desiredOutcome = desiredOutcomeDictionary[encodedMyThrow];
+    const myCorrectEncodedThrow = getThrowForDesiredOutcome({
+      encodedOpponentThrow,
+      desiredOutcome,
+    });
+    correctScore += rockPaperScissors({
+      encodedMyThrow: myCorrectEncodedThrow,
+      encodedOpponentThrow,
+    });
   };
 
   await readLines({ callback, day: 'two' });
 
-  return { wrongTotal: totalScore, correctTotal: correctTotalScore };
+  return { correctScore, incorrectScore };
 }
