@@ -1,7 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-import events from 'events';
-import readline from 'readline';
+import { readLines } from '../read-lines';
 
 /*
  * A: Rock
@@ -62,32 +59,6 @@ function rockPaperScissors({
   }
 }
 
-export async function getTotalScore(): Promise<number> {
-  const lineReader = readline.createInterface({
-    input: fs.createReadStream(
-      path.join(__dirname, '..', '..', 'src', 'day-two', 'inputs.txt'),
-      'utf-8'
-    ),
-  });
-
-  let totalScore = 0;
-  lineReader.on('line', (line) => {
-    const round = line.split(' ');
-    const opponent = round[0] as OpponentThrow;
-    const you = round[1] as YourThrow;
-    totalScore += rockPaperScissors({
-      opponent,
-      you,
-    });
-  });
-
-  await events.once(lineReader, 'close');
-
-  return totalScore;
-}
-
-// part two
-
 type DesiredOutcome = 'lose' | 'draw' | 'win';
 
 function decodeDesiredOutcome({
@@ -143,25 +114,31 @@ function getThrowForDesiredOutcome({
   }
 }
 
-export async function getTotalScorePartTwo(): Promise<number> {
-  const lineReader = readline.createInterface({
-    input: fs.createReadStream(
-      path.join(__dirname, '..', '..', 'src', 'day-two', 'inputs.txt'),
-      'utf-8'
-    ),
-  });
-
+export async function getTotalScore(): Promise<{
+  wrongTotal: number;
+  correctTotal: number;
+}> {
   let totalScore = 0;
-  lineReader.on('line', (line) => {
+  let correctTotalScore = 0;
+
+  const callback = (line: string) => {
+    // part one
     const round = line.split(' ');
     const opponent = round[0] as OpponentThrow;
+    const you = round[1] as YourThrow;
+    totalScore += rockPaperScissors({
+      opponent,
+      you,
+    });
+
+    // part two
     const encoded = round[1] as YourThrow;
     const outcome = decodeDesiredOutcome({ encoded });
-    const you = getThrowForDesiredOutcome({ opponent, outcome });
-    totalScore += rockPaperScissors({ opponent, you });
-  });
+    const correctYou = getThrowForDesiredOutcome({ opponent, outcome });
+    correctTotalScore += rockPaperScissors({ opponent, you: correctYou });
+  };
 
-  await events.once(lineReader, 'close');
+  await readLines({ callback, day: 'two' });
 
-  return totalScore;
+  return { wrongTotal: totalScore, correctTotal: correctTotalScore };
 }
