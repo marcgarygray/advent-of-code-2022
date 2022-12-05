@@ -53,7 +53,7 @@ export async function getPrioritySums(): Promise<PrioritySums> {
     }
   };
 
-  await readLines({ callback, day: '3' });
+  await readLines({ callback, day: '03' });
 
   // part two
   elfGroups.forEach((group) => {

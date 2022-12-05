@@ -19,7 +19,7 @@ export async function getTopThreeElvesByCalories(): Promise<TopThree> {
     }
   };
 
-  await readLines({ callback, day: '1' });
+  await readLines({ callback, day: '01' });
 
   elvesByCalories.sort((a, b) => b - a);
 

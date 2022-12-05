@@ -39,7 +39,7 @@ export async function getFullyOverlappedPairCount(): Promise<OverlapCounts> {
     }
   };
 
-  await readLines({ callback, day: '4' });
+  await readLines({ callback, day: '04' });
 
   return { anyOverlap, completeOverlap };
 }

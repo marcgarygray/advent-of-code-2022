@@ -90,7 +90,7 @@ export async function getTopCrates(): Promise<TopCrates> {
     });
   };
 
-  await readLines({ callback, day: '5' });
+  await readLines({ callback, day: '05' });
 
   return {
     withCrateMover9000: stacksForCrateMover9000.reduce(

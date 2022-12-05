@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
 
-import { getTopThreeElvesByCalories } from './days/1/solution';
-import { getScores } from './days/2/solution';
-import { getPrioritySums } from './days/3/solution';
-import { getFullyOverlappedPairCount } from './days/4/solution';
-import { getTopCrates } from './days/5/solution';
+import { getTopThreeElvesByCalories } from './days/01/solution';
+import { getScores } from './days/02/solution';
+import { getPrioritySums } from './days/03/solution';
+import { getFullyOverlappedPairCount } from './days/04/solution';
+import { getTopCrates } from './days/05/solution';
 
 (async () => {
   console.log(chalk.magenta.bold.underline('\nAdvent of Code 2022'));

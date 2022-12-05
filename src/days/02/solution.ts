@@ -155,7 +155,7 @@ export async function getScores(): Promise<Scores> {
     });
   };
 
-  await readLines({ callback, day: '2' });
+  await readLines({ callback, day: '02' });
 
   return { correctScore, incorrectScore };
 }
