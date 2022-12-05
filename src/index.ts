@@ -5,6 +5,7 @@ import { getTopThreeElvesByCalories } from './days/1/solution';
 import { getScores } from './days/2/solution';
 import { getPrioritySums } from './days/3/solution';
 import { getFullyOverlappedPairCount } from './days/4/solution';
+import { getTopCrates } from './days/5/solution';
 
 (async () => {
   console.log(chalk.magenta.bold.underline('\nAdvent of Code 2022'));
@@ -68,16 +69,17 @@ import { getFullyOverlappedPairCount } from './days/4/solution';
   );
 
   // day five
-  const partOneAnswer = 'part one answer';
-  const partTwoAnswer = 'part two answer';
+  const { withCrateMover9000, withCrateMover9001 } = await getTopCrates();
 
   console.log(
     `\n${chalk.magenta.underline('Day Five Answers:')}\n  ${chalk.greenBright(
       '>'
-    )} ${chalk.magenta('Part One: ')}${chalk.bgMagenta.white(
-      `${partOneAnswer}`
-    )}\n  ${chalk.greenBright('>')} ${chalk.magenta(
-      'Part Two: '
-    )}${chalk.bgMagenta.white(`${partTwoAnswer}`)}`
+    )} ${chalk.magenta(
+      'Top Crates with CrateMover 9000: '
+    )}${chalk.bgMagenta.white(`${withCrateMover9000}`)}\n  ${chalk.greenBright(
+      '>'
+    )} ${chalk.magenta(
+      'Top Crates with CrateMover 9001: '
+    )}${chalk.bgMagenta.white(`${withCrateMover9001}`)}`
   );
 })();
